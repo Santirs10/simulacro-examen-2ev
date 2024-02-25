@@ -21,7 +21,7 @@ export const putItemHandler = async (event) => {
 
     // Get id and name from the body of the request
     const body = JSON.parse(event.body);
-    const id = body.id; //math random
+    const id = body.id; 
     const marca = body.marca;
     const modelo = body.modelo;
     const color = body.color;
