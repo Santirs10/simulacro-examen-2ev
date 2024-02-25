@@ -21,14 +21,52 @@ export const putItemHandler = async (event) => {
 
     // Get id and name from the body of the request
     const body = JSON.parse(event.body);
-    const id = body.id;
-    const name = body.name;
+    const id = body.id; //math random
+    const marca = body.marca;
+    const modelo = body.modelo;
+    const color = body.color;
+    const tipo = body.tipo;
+    const año = body.año; // parsearlo porque lo reconoce como string
+    const distintivo = body.distintivo;
+
+    console.log ('DEBUG', body);
+
+    // creamos una funcion para determinar el tipo de distintivo ambiental
+    let tipoCombustible;
+    switch (distintivo){
+        case "B":
+            tipoCombustible="Diésel";
+            break;
+        case "C":
+            tipoCombustible="Gasolina";
+            break;
+        case "Eco":
+            tipoCombustible="Híbrido";
+            break;
+        case "0":
+            tipoCombustible="Electrico";
+            break;
+        default:
+            tipoCombustible="Desconocido";
+    }
 
     // Creates a new item, or replaces an old item with a new item
     // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property
+    if (año < 1940) {
+        return {
+            statusCode: 403,
+            body: "El año introducido es demasiado antiguo, no hay registros"
+        }
+
+    }else{
+
+
+    
+    
+    
     var params = {
         TableName : tableName,
-        Item: { id : id, name: name }
+        Item: { id : id, marca : marca, modelo : modelo, color : color, tipo : tipo, año : año, distintivo : distintivo, tipoCombustible : tipoCombustible }
     };
 
     try {
@@ -44,6 +82,7 @@ export const putItemHandler = async (event) => {
     };
 
     // All log statements are written to CloudWatch
-    console.info(`response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`);
-    return response;
+        console.info(`response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`);
+        return response;
+    }
 };
